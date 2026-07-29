@@ -637,7 +637,7 @@
 
     <!-- Minecraft server side ad (desktop) -->
     <aside class="mc-ad">
-        <img src="images/EdenSMP2.png" alt="EdenSMP Minecraft Network">
+        <img src="/images/EdenSMP2.png" alt="EdenSMP Minecraft Network">
         <p class="mc-ad-text">Like our islands? You'll enjoy our <strong>Minecraft network!</strong> Join us!</p>
         <a href="https://discord.gg/J9HA2d93pq" target="_blank" class="mc-join-btn">Join</a>
     </aside>
@@ -656,7 +656,7 @@
 
         <!-- Minecraft server ad (inline, shown on smaller screens) -->
         <aside class="mc-ad-inline mc-ad">
-            <img src="images/EdenSMP2.png" alt="EdenSMP Minecraft Network">
+            <img src="/images/EdenSMP2.png" alt="EdenSMP Minecraft Network">
             <p class="mc-ad-text">Like our islands? You'll enjoy our <strong>Minecraft network!</strong> Join us!</p>
             <a href="https://discord.gg/J9HA2d93pq" target="_blank" class="mc-join-btn">Join</a>
         </aside>
@@ -680,11 +680,11 @@
         <div class="villagers-view" id="villagersView">
             <div class="villager-block">
                 <h2 class="villager-heading">Subscriber Villagers</h2>
-                <img src="images/SUB_villagers.png" alt="Subscriber Villagers" class="villager-image">
+                <img src="/images/SUB_villagers.png" alt="Subscriber Villagers" class="villager-image">
             </div>
             <div class="villager-block">
                 <h2 class="villager-heading">FFA Villagers</h2>
-                <img src="images/FFA_villagers.png" alt="FFA Villagers" class="villager-image">
+                <img src="/images/FFA_villagers.png" alt="FFA Villagers" class="villager-image">
             </div>
         </div>
     </div>
@@ -836,7 +836,7 @@
                 card.dataset.name = map.name.toLowerCase();
                 card.dataset.type = map.type;
                 card.innerHTML = `
-                    <img src="images/${map.file}" alt="${map.name}" class="map-image">
+                    <img src="/images/${map.file}" alt="${map.name}" class="map-image">
                     <div class="map-info">
                         <div class="map-name">${map.name}</div>
                         <div class="map-footer">
@@ -908,7 +908,7 @@
             const typeEl = document.getElementById('detailType');
 
             // Use exact filename
-            image.src = `images/${fileByName[mapName]}`;
+            image.src = `/images/${fileByName[mapName]}`;
 
             nameEl.textContent = mapName;
             typeEl.textContent = mapType.toUpperCase();
