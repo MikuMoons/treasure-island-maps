@@ -34,15 +34,26 @@
 
         .leaf {
             position: absolute;
-            width: 25px;
-            height: 25px;
+            width: 40px;
+            height: 40px;
             background-size: contain;
             background-repeat: no-repeat;
+            background-position: center;
             animation: fall linear infinite;
-            opacity: 0.15;
+            opacity: 0.65;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.25));
         }
 
         @keyframes fall {
+            0% {
+                opacity: 0;
+            }
+            15% {
+                opacity: 0.65;
+            }
+            85% {
+                opacity: 0.65;
+            }
             to {
                 transform: translateY(100vh) rotate(360deg);
                 opacity: 0;
@@ -69,6 +80,81 @@
             padding: 60px 20px;
         }
 
+        /* Minecraft server side ad */
+        .mc-ad {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            width: 220px;
+            background: rgba(20, 32, 44, 0.92);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            padding: 20px;
+            z-index: 50;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .mc-ad img {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 14px;
+            display: block;
+        }
+
+        .mc-ad-text {
+            color: #e0e0e0;
+            font-size: 0.92em;
+            line-height: 1.45;
+            margin-bottom: 16px;
+        }
+
+        .mc-ad-text strong {
+            color: #f5d76e;
+        }
+
+        .mc-join-btn {
+            display: block;
+            padding: 12px;
+            background: linear-gradient(135deg, #5865F2 0%, #4752c4 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.95em;
+            letter-spacing: 0.4px;
+            transition: all 0.3s ease;
+        }
+
+        .mc-join-btn:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #4752c4 0%, #3c45a5 100%);
+            box-shadow: 0 6px 18px rgba(88, 101, 242, 0.4);
+        }
+
+        /* Hide side ad on narrower screens, show inline version instead */
+        .mc-ad-inline {
+            display: none;
+        }
+
+        @media (max-width: 1250px) {
+            aside.mc-ad:not(.mc-ad-inline) {
+                display: none;
+            }
+            .mc-ad-inline {
+                display: block;
+                position: static;
+                transform: none;
+                width: 100%;
+                max-width: 420px;
+                margin: 0 auto 40px;
+                right: auto;
+                top: auto;
+            }
+        }
+
         header {
             text-align: center;
             margin-bottom: 60px;
@@ -93,6 +179,45 @@
             font-size: 1.15em;
             font-weight: 400;
             letter-spacing: 0.5px;
+        }
+
+        /* Search */
+        .search-wrap {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            width: 100%;
+            max-width: 400px;
+            padding: 13px 20px;
+            font-size: 1em;
+            border: 1.5px solid rgba(255, 255, 255, 0.15);
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.06);
+            color: #e0e0e0;
+            font-family: 'Outfit', sans-serif;
+            letter-spacing: 0.3px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input::placeholder {
+            color: #8a9aa8;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: rgba(245, 215, 110, 0.5);
+            background: rgba(255, 255, 255, 0.09);
+        }
+
+        .no-results {
+            display: none;
+            text-align: center;
+            color: #8a9aa8;
+            font-size: 1.1em;
+            margin: 40px 0;
         }
 
         /* Buttons */
@@ -154,8 +279,8 @@
         /* Gallery Grid */
         .gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
+            gap: 30px;
         }
 
         .map-card {
@@ -181,9 +306,10 @@
 
         .map-image {
             width: 100%;
-            height: 200px;
-            object-fit: cover;
-            background: rgba(0, 0, 0, 0.3);
+            height: 440px;
+            object-fit: contain;
+            background: rgba(0, 0, 0, 0.25);
+            padding: 8px;
         }
 
         .map-info {
@@ -376,8 +502,12 @@
             }
 
             .gallery {
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-                gap: 15px;
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .map-image {
+                height: 340px;
             }
 
             .map-detail-content {
@@ -466,6 +596,13 @@
     <!-- Falling leaves -->
     <div class="leaves-container" id="leavesContainer"></div>
 
+    <!-- Minecraft server side ad (desktop) -->
+    <aside class="mc-ad">
+        <img src="images/EdenSMP2.png" alt="EdenSMP Minecraft Network">
+        <p class="mc-ad-text">Like our islands? You'll enjoy our <strong>Minecraft network!</strong> Join us!</p>
+        <a href="https://discord.gg/J9HA2d93pq" target="_blank" class="mc-join-btn">Join</a>
+    </aside>
+
     <!-- Main content -->
     <div class="container">
         <header>
@@ -477,11 +614,24 @@
             </div>
         </header>
 
+        <!-- Minecraft server ad (inline, shown on smaller screens) -->
+        <aside class="mc-ad-inline mc-ad">
+            <img src="images/EdenSMP2.png" alt="EdenSMP Minecraft Network">
+            <p class="mc-ad-text">Like our islands? You'll enjoy our <strong>Minecraft network!</strong> Join us!</p>
+            <a href="https://discord.gg/J9HA2d93pq" target="_blank" class="mc-join-btn">Join</a>
+        </aside>
+
+        <div class="search-wrap">
+            <input type="text" id="searchInput" class="search-input" placeholder="Search maps..." oninput="applyFilters()">
+        </div>
+
         <div class="filter-buttons">
             <button class="btn-all active" onclick="filterMaps('all')">All</button>
             <button class="btn-subscriber" onclick="filterMaps('subscriber')">Subscriber Only</button>
             <button class="btn-ffa" onclick="filterMaps('ffa')">FFA</button>
         </div>
+
+        <div class="no-results" id="noResults">No maps match your search.</div>
 
         <div class="gallery" id="gallery"></div>
     </div>
@@ -503,23 +653,69 @@
     </div>
 
     <script>
-        // Map data with names and types
+        // Map data — name (display) + file (exact filename in images folder)
         const subscriberMaps = [
-            'cactus', 'mocha', 'tulip', 'reef', 'honey', 'dusk', 'bloom', 'shore', 
-            'pixie', 'diy', 'breeze', 'core', 'core2', 'sunset', 'attire', 'costume', 
-            'mono', 'bumble', 'indigo', 'cherry', 'eden'
+            { name: 'cactus', file: 'Cactus.png' },
+            { name: 'mocha', file: 'MOCHA.png' },
+            { name: 'tulip', file: 'TULIP.png' },
+            { name: 'reef', file: 'REEF.png' },
+            { name: 'honey', file: 'HONEY.png' },
+            { name: 'dusk', file: 'DUSK.png' },
+            { name: 'bloom', file: 'BLOOM.png' },
+            { name: 'shore', file: 'SHORE.png' },
+            { name: 'pixie', file: 'PIXIE.png' },
+            { name: 'diy', file: 'DIY.png' },
+            { name: 'breeze', file: 'BREEZE.png' },
+            { name: 'core', file: 'CORE.png' },
+            { name: 'core2', file: 'CORE2.png' },
+            { name: 'sunset', file: 'SUNSET.png' },
+            { name: 'attire', file: 'ATTIRE.png' },
+            { name: 'costume', file: 'COSTUME.png' },
+            { name: 'mono', file: 'MONO.png' },
+            { name: 'bumble', file: 'BUMBLE.png' },
+            { name: 'indigo', file: 'INDIGO.png' },
+            { name: 'cherry', file: 'CHERRY.png' },
+            { name: 'eden', file: 'EDEN.png' }
         ];
 
         const ffaMaps = [
-            'fern', 'latte', 'orchid', 'coral', 'syrup', 'dawn', 'petal', 'bay', 
-            'atlas', 'school', 'wither', 'cloud', 'nookea', 'series', 'tutor', 'repair', 
-            'snug', 'garment', 'robe', 'suit', 'wardrobe', 'oasis', 'atoll', 'haru', 'natsu', 'aki', 'fuyu'
+            { name: 'fern', file: 'FERN.png' },
+            { name: 'latte', file: 'LATTE.png' },
+            { name: 'orchid', file: 'ORCHID.png' },
+            { name: 'coral', file: 'CORAL.png' },
+            { name: 'syrup', file: 'SYRUP.png' },
+            { name: 'dawn', file: 'DAWN.png' },
+            { name: 'petal', file: 'PETAL.png' },
+            { name: 'bay', file: 'BAY.png' },
+            { name: 'atlas', file: 'ATLAS.png' },
+            { name: 'school', file: 'school.png' },
+            { name: 'wither', file: 'WITHER.webp' },
+            { name: 'cloud', file: 'CLOUD.webp' },
+            { name: 'nookea', file: 'nookea.png' },
+            { name: 'series', file: 'SERIES.webp' },
+            { name: 'tutor', file: 'tutor.png' },
+            { name: 'repair', file: 'repair.png' },
+            { name: 'snug', file: 'snug.png' },
+            { name: 'garment', file: 'GARMENT.webp' },
+            { name: 'robe', file: 'ROBE.webp' },
+            { name: 'suit', file: 'SUIT.webp' },
+            { name: 'wardrobe', file: 'WARDROBE.webp' },
+            { name: 'oasis', file: 'oasis.png' },
+            { name: 'atoll', file: 'ATOLL.png' },
+            { name: 'haru', file: 'HARU.png' },
+            { name: 'natsu', file: 'natsu.png' },
+            { name: 'aki', file: 'aki.png' },
+            { name: 'fuyu', file: 'fuyu.png' }
         ];
 
         const allMaps = [
-            ...subscriberMaps.map(name => ({ name, type: 'subscriber' })),
-            ...ffaMaps.map(name => ({ name, type: 'ffa' }))
+            ...subscriberMaps.map(m => ({ name: m.name, file: m.file, type: 'subscriber' })),
+            ...ffaMaps.map(m => ({ name: m.name, file: m.file, type: 'ffa' }))
         ];
+
+        // Quick lookup: name -> filename (for the detail modal)
+        const fileByName = {};
+        allMaps.forEach(m => { fileByName[m.name] = m.file; });
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
@@ -529,20 +725,27 @@
 
         function createLeaves() {
             const container = document.getElementById('leavesContainer');
-            const leafColors = [
-                'linear-gradient(45deg, #ff6b35 0%, #ff8c42 100%)',
-                'linear-gradient(45deg, #f7931e 0%, #fdb833 100%)',
-                'linear-gradient(45deg, #d4a373 0%, #c19a6b 100%)',
-                'linear-gradient(45deg, #cd5c5c 0%, #e74c3c 100%)',
-                'linear-gradient(45deg, #8b4513 0%, #a0522d 100%)'
-            ];
+            const leafColors = ['#ff6b35', '#f7931e', '#e0902a', '#cd5c5c', '#c0392b', '#d4a373', '#b5651d'];
 
-            for (let i = 0; i < 10; i++) {
+            // A simple maple-ish leaf as an SVG path
+            const leafSVG = (color) => `data:image/svg+xml;utf8,` + encodeURIComponent(
+                `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="${color}">
+                    <path d="M12 2c1 2 2 3 4 3-1 1-1 2-1 3 2-1 3-1 5-1-1 2-2 3-2 4 1 0 2 1 3 1-2 2-4 3-6 3l1 4h-2l-1-4c-2 0-4-1-6-3 1 0 2-1 3-1 0-1-1-2-2-4 2 0 3 0 5 1 0-1 0-2-1-3 2 0 3-1 4-3z"/>
+                </svg>`
+            );
+
+            for (let i = 0; i < 18; i++) {
                 const leaf = document.createElement('div');
                 leaf.className = 'leaf';
-                leaf.style.background = leafColors[i % leafColors.length];
-                leaf.style.borderRadius = '50% 0';
-                leaf.style.top = Math.random() * 100 + 'px';
+                const color = leafColors[i % leafColors.length];
+                leaf.style.backgroundImage = `url("${leafSVG(color)}")`;
+                leaf.style.left = (Math.random() * 100) + '%';
+                leaf.style.top = (Math.random() * -200) + 'px';
+                const size = 26 + Math.random() * 24;
+                leaf.style.width = size + 'px';
+                leaf.style.height = size + 'px';
+                leaf.style.animationDuration = (7 + Math.random() * 7) + 's';
+                leaf.style.animationDelay = (Math.random() * 6) + 's';
                 container.appendChild(leaf);
             }
         }
@@ -554,8 +757,10 @@
             allMaps.forEach((map, index) => {
                 const card = document.createElement('div');
                 card.className = `map-card show ${map.type}`;
+                card.dataset.name = map.name.toLowerCase();
+                card.dataset.type = map.type;
                 card.innerHTML = `
-                    <img src="images/${capitalizeFirst(map.name)}.png" alt="${map.name}" class="map-image" onerror="this.src='images/${capitalizeFirst(map.name)}.webp'">
+                    <img src="images/${map.file}" alt="${map.name}" class="map-image">
                     <div class="map-info">
                         <div class="map-name">${map.name}</div>
                         <span class="map-type ${map.type === 'subscriber' ? 'type-subscriber' : 'type-ffa'}">
@@ -568,25 +773,36 @@
             });
         }
 
+        // Current active category, combined with search text
+        let activeType = 'all';
+
         function filterMaps(type) {
+            activeType = type;
+            // Update button states
+            document.querySelectorAll('.filter-buttons button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            if (event && event.target) event.target.classList.add('active');
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const query = (document.getElementById('searchInput').value || '').trim().toLowerCase();
             const cards = document.querySelectorAll('.map-card');
+            let visibleCount = 0;
+
             cards.forEach(card => {
-                if (type === 'all') {
+                const matchesType = (activeType === 'all') || (card.dataset.type === activeType);
+                const matchesSearch = (query === '') || card.dataset.name.includes(query);
+                if (matchesType && matchesSearch) {
                     card.classList.add('show');
-                } else if (type === 'subscriber' && card.classList.contains('subscriber')) {
-                    card.classList.add('show');
-                } else if (type === 'ffa' && card.classList.contains('ffa')) {
-                    card.classList.add('show');
+                    visibleCount++;
                 } else {
                     card.classList.remove('show');
                 }
             });
 
-            // Update button states
-            document.querySelectorAll('.filter-buttons button').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
+            document.getElementById('noResults').style.display = visibleCount === 0 ? 'block' : 'none';
         }
 
         function openMapDetail(e, mapName, mapType) {
@@ -597,11 +813,8 @@
             const typeEl = document.getElementById('detailType');
             const linkInput = document.getElementById('mapLink');
 
-            // Try PNG first, fall back to WebP
-            image.src = `images/${capitalizeFirst(mapName)}.png`;
-            image.onerror = () => {
-                image.src = `images/${capitalizeFirst(mapName)}.webp`;
-            };
+            // Use exact filename
+            image.src = `images/${fileByName[mapName]}`;
 
             nameEl.textContent = mapName;
             typeEl.textContent = mapType.toUpperCase();
