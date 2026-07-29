@@ -86,11 +86,11 @@
             top: 50%;
             right: 20px;
             transform: translateY(-50%);
-            width: 220px;
+            width: 440px;
             background: rgba(20, 32, 44, 0.92);
             border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 12px;
-            padding: 20px;
+            border-radius: 16px;
+            padding: 30px;
             z-index: 50;
             text-align: center;
             backdrop-filter: blur(10px);
@@ -99,16 +99,16 @@
 
         .mc-ad img {
             width: 100%;
-            border-radius: 8px;
-            margin-bottom: 14px;
+            border-radius: 10px;
+            margin-bottom: 20px;
             display: block;
         }
 
         .mc-ad-text {
             color: #e0e0e0;
-            font-size: 0.92em;
+            font-size: 1.35em;
             line-height: 1.45;
-            margin-bottom: 16px;
+            margin-bottom: 24px;
         }
 
         .mc-ad-text strong {
@@ -117,13 +117,13 @@
 
         .mc-join-btn {
             display: block;
-            padding: 12px;
+            padding: 18px;
             background: linear-gradient(135deg, #5865F2 0%, #4752c4 100%);
             color: white;
             text-decoration: none;
-            border-radius: 6px;
+            border-radius: 8px;
             font-weight: 700;
-            font-size: 0.95em;
+            font-size: 1.3em;
             letter-spacing: 0.4px;
             transition: all 0.3s ease;
         }
@@ -139,7 +139,7 @@
             display: none;
         }
 
-        @media (max-width: 1250px) {
+        @media (max-width: 1650px) {
             aside.mc-ad:not(.mc-ad-inline) {
                 display: none;
             }
@@ -148,7 +148,7 @@
                 position: static;
                 transform: none;
                 width: 100%;
-                max-width: 420px;
+                max-width: 500px;
                 margin: 0 auto 40px;
                 right: auto;
                 top: auto;
@@ -545,6 +545,31 @@
             border-bottom-color: #f5d76e;
         }
 
+        .prime-note {
+            color: #b0b0b0;
+            font-size: 0.98em;
+            line-height: 1.5;
+            max-width: 520px;
+            margin: 0 auto 20px;
+        }
+
+        .prime-note strong {
+            color: #a970ff;
+        }
+
+        .prime-note a {
+            color: #a970ff;
+            text-decoration: none;
+            font-weight: 600;
+            border-bottom: 2px solid rgba(169, 112, 255, 0.35);
+            transition: all 0.3s;
+        }
+
+        .prime-note a:hover {
+            color: #c9a3ff;
+            border-bottom-color: #a970ff;
+        }
+
         /* LIVE button */
         @keyframes pulse-glow {
             0% {
@@ -610,6 +635,7 @@
             <p class="subtitle">Browse all available islands to visit</p>
             <div>
                 <p class="twitch-link"><a href="https://www.twitch.tv/treasureislands/" target="_blank">twitch.tv/treasureislands</a></p>
+                <p class="prime-note">Subscribe for <strong>FREE</strong> with Twitch Prime for <strong>FREE</strong> subscriber island access in the <a href="https://discord.gg/treasureislands" target="_blank">Discord</a>!</p>
                 <a href="https://www.twitch.tv/treasureislands/" target="_blank" class="live-button">LIVE NOW</a>
             </div>
         </header>
