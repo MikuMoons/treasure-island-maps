@@ -326,8 +326,8 @@
         /* Gallery Grid */
         .gallery {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 24px;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 18px;
         }
 
         .map-card {
@@ -353,7 +353,7 @@
 
         .map-image {
             width: 100%;
-            height: 340px;
+            height: 220px;
             object-fit: contain;
             background: rgba(0, 0, 0, 0.15);
             padding: 8px;
@@ -506,16 +506,24 @@
             letter-spacing: 0.5px;
         }
 
-        /* Responsive columns: 4 -> 3 -> 2 -> 1 */
-        @media (max-width: 1200px) {
+        /* Responsive columns: 6 -> 5 -> 4 -> 3 -> 2 -> 1 */
+        @media (max-width: 1500px) {
+            .gallery { grid-template-columns: repeat(5, 1fr); }
+        }
+
+        @media (max-width: 1250px) {
+            .gallery { grid-template-columns: repeat(4, 1fr); }
+        }
+
+        @media (max-width: 1000px) {
             .gallery { grid-template-columns: repeat(3, 1fr); }
         }
 
-        @media (max-width: 850px) {
+        @media (max-width: 768px) {
             .gallery { grid-template-columns: repeat(2, 1fr); }
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 520px) {
             h1 {
                 font-size: 2.5em;
             }
