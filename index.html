@@ -194,8 +194,9 @@
         }
 
         h1 {
-            font-family: 'Playfair Display', serif;
+            font-family: 'Outfit', sans-serif;
             font-size: 4em;
+            font-weight: 700;
             color: #f5d76e;
             text-shadow: none;
             margin-bottom: 15px;
@@ -515,45 +516,6 @@
             letter-spacing: 0.5px;
         }
 
-        .copy-link {
-            margin-top: 25px;
-        }
-
-        .copy-link input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 6px;
-            font-size: 0.95em;
-            margin-bottom: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            color: #e0e0e0;
-            font-family: 'Outfit', monospace;
-        }
-
-        .copy-link input:focus {
-            outline: none;
-            border-color: rgba(245, 215, 110, 0.5);
-        }
-
-        .copy-btn {
-            background: rgba(245, 215, 110, 0.15);
-            color: #f5d76e;
-            padding: 11px 22px;
-            border: 1px solid rgba(245, 215, 110, 0.3);
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-            font-family: 'Outfit', sans-serif;
-            letter-spacing: 0.3px;
-        }
-
-        .copy-btn:hover {
-            background: rgba(245, 215, 110, 0.25);
-            border-color: rgba(245, 215, 110, 0.6);
-        }
-
         @media (max-width: 768px) {
             h1 {
                 font-size: 2.5em;
@@ -751,10 +713,6 @@
             <div class="detail-info">
                 <div class="detail-name" id="detailName"></div>
                 <div class="detail-type" id="detailType"></div>
-                <div class="copy-link">
-                    <input type="text" id="mapLink" readonly>
-                    <button class="copy-btn" onclick="copyLink()">Copy Link</button>
-                </div>
             </div>
         </div>
     </div>
@@ -943,7 +901,6 @@
             const image = document.getElementById('detailImage');
             const nameEl = document.getElementById('detailName');
             const typeEl = document.getElementById('detailType');
-            const linkInput = document.getElementById('mapLink');
 
             // Use exact filename
             image.src = `images/${fileByName[mapName]}`;
@@ -951,29 +908,12 @@
             nameEl.textContent = mapName;
             typeEl.textContent = mapType.toUpperCase();
             typeEl.className = `detail-type ${mapType === 'subscriber' ? 'type-subscriber' : 'type-ffa'}`;
-            
-            // Generate shareable link
-            const mapId = `${mapName}-${mapType}`;
-            linkInput.value = `${window.location.origin}?map=${encodeURIComponent(mapId)}`;
 
             modal.classList.add('show');
         }
 
         function closeMapDetail() {
             document.getElementById('mapDetail').classList.remove('show');
-        }
-
-        function copyLink() {
-            const input = document.getElementById('mapLink');
-            input.select();
-            document.execCommand('copy');
-            
-            const btn = document.querySelector('.copy-btn');
-            const original = btn.textContent;
-            btn.textContent = 'Copied';
-            setTimeout(() => {
-                btn.textContent = original;
-            }, 2000);
         }
 
         function capitalizeFirst(str) {
