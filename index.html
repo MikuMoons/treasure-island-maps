@@ -75,7 +75,7 @@
         .container {
             position: relative;
             z-index: 2;
-            max-width: 1500px;
+            max-width: 1700px;
             margin: 0 auto;
             padding: 60px 30px;
         }
@@ -331,7 +331,7 @@
         /* Gallery Grid */
         .gallery {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(5, 1fr);
             gap: 24px;
         }
 
@@ -511,8 +511,11 @@
             letter-spacing: 0.5px;
         }
 
-        /* Responsive columns: 6 -> 5 -> 4 -> 3 -> 2 -> 1 */
-        /* Ultra-wide monitors get 6 columns */
+        /* Responsive columns: 5 -> 4 -> 3 -> 2 -> 1 */
+        @media (max-width: 1350px) {
+            .gallery { grid-template-columns: repeat(4, 1fr); }
+        }
+
         @media (max-width: 1050px) {
             .gallery { grid-template-columns: repeat(3, 1fr); }
         }
