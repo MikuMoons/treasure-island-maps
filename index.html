@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treasure Island Maps</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, #1a2a3a 0%, #2d3e50 50%, #1a3a4a 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            color: #e0e0e0;
+        }
+
+        /* Falling leaves animation - subtle */
+        .leaves-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .leaf {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            animation: fall linear infinite;
+            opacity: 0.15;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .leaf:nth-child(1) { animation-duration: 8s; left: 10%; animation-delay: 0s; }
+        .leaf:nth-child(2) { animation-duration: 10s; left: 20%; animation-delay: 2s; }
+        .leaf:nth-child(3) { animation-duration: 12s; left: 30%; animation-delay: 4s; }
+        .leaf:nth-child(4) { animation-duration: 9s; left: 40%; animation-delay: 1s; }
+        .leaf:nth-child(5) { animation-duration: 11s; left: 50%; animation-delay: 3s; }
+        .leaf:nth-child(6) { animation-duration: 10s; left: 60%; animation-delay: 5s; }
+        .leaf:nth-child(7) { animation-duration: 9s; left: 70%; animation-delay: 2s; }
+        .leaf:nth-child(8) { animation-duration: 12s; left: 80%; animation-delay: 4s; }
+        .leaf:nth-child(9) { animation-duration: 11s; left: 90%; animation-delay: 1s; }
+        .leaf:nth-child(10) { animation-duration: 10s; left: 5%; animation-delay: 3s; }
+
+        /* Content */
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 50px 30px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4em;
+            color: #f5d76e;
+            text-shadow: none;
+            margin-bottom: 15px;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            color: #b0b0b0;
+            font-size: 1.15em;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        /* Buttons */
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 11px 24px;
+            font-size: 0.95em;
+            border: 1.5px solid transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.08);
+            color: #e0e0e0;
+            font-family: 'Outfit', sans-serif;
+            letter-spacing: 0.3px;
+        }
+
+        .btn-all {
+            border-color: #f5d76e;
+            color: #f5d76e;
+        }
+
+        .btn-subscriber {
+            border-color: #ff8a80;
+            color: #ff8a80;
+        }
+
+        .btn-ffa {
+            border-color: #80deea;
+            color: #80deea;
+        }
+
+        button:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-2px);
+        }
+
+        button.active {
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 20px rgba(245, 215, 110, 0.3);
+        }
+
+        button.active.btn-subscriber {
+            box-shadow: 0 0 20px rgba(255, 138, 128, 0.3);
+        }
+
+        button.active.btn-ffa {
+            box-shadow: 0 0 20px rgba(128, 222, 234, 0.3);
+        }
+
+        /* Gallery Grid */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        .map-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: none;
+            backdrop-filter: blur(5px);
+        }
+
+        .map-card.show {
+            display: block;
+        }
+
+        .map-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .map-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .map-info {
+            padding: 16px;
+            text-align: center;
+        }
+
+        .map-name {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #f0f0f0;
+            margin-bottom: 10px;
+            text-transform: capitalize;
+            letter-spacing: 0.3px;
+        }
+
+        .map-type {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .type-subscriber {
+            background: rgba(255, 138, 128, 0.15);
+            color: #ff8a80;
+            border: 1px solid rgba(255, 138, 128, 0.3);
+        }
+
+        .type-ffa {
+            background: rgba(128, 222, 234, 0.15);
+            color: #80deea;
+            border: 1px solid rgba(128, 222, 234, 0.3);
+        }
+
+        .map-card a {
+            display: inline-block;
+            margin-top: 12px;
+            color: #f5d76e;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: all 0.3s;
+            padding: 6px 12px;
+            border-bottom: 2px solid rgba(245, 215, 110, 0.3);
+        }
+
+        .map-card a:hover {
+            color: #ffeaa7;
+            border-bottom-color: #f5d76e;
+        }
+
+        /* Individual map page */
+        .map-detail {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(3px);
+        }
+
+        .map-detail.show {
+            display: flex;
+        }
+
+        .map-detail-content {
+            background: rgba(26, 42, 58, 0.95);
+            border-radius: 10px;
+            max-width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 138, 128, 0.2);
+            color: #ff8a80;
+            border: 1px solid rgba(255, 138, 128, 0.4);
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: all 0.3s;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 138, 128, 0.3);
+            border-color: rgba(255, 138, 128, 0.6);
+        }
+
+        .detail-image {
+            width: 100%;
+            max-height: 70vh;
+            object-fit: contain;
+            display: block;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .detail-info {
+            padding: 35px;
+            text-align: center;
+        }
+
+        .detail-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2em;
+            font-weight: 700;
+            color: #f5d76e;
+            text-transform: capitalize;
+            margin-bottom: 15px;
+            letter-spacing: -0.5px;
+        }
+
+        .detail-type {
+            display: inline-block;
+            padding: 8px 18px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.95em;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .copy-link {
+            margin-top: 25px;
+        }
+
+        .copy-link input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 6px;
+            font-size: 0.95em;
+            margin-bottom: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #e0e0e0;
+            font-family: 'Outfit', monospace;
+        }
+
+        .copy-link input:focus {
+            outline: none;
+            border-color: rgba(245, 215, 110, 0.5);
+        }
+
+        .copy-btn {
+            background: rgba(245, 215, 110, 0.15);
+            color: #f5d76e;
+            padding: 11px 22px;
+            border: 1px solid rgba(245, 215, 110, 0.3);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-family: 'Outfit', sans-serif;
+            letter-spacing: 0.3px;
+        }
+
+        .copy-btn:hover {
+            background: rgba(245, 215, 110, 0.25);
+            border-color: rgba(245, 215, 110, 0.6);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5em;
+            }
+
+            .subtitle {
+                font-size: 1em;
+            }
+
+            .gallery {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 15px;
+            }
+
+            .map-detail-content {
+                max-width: 95%;
+                max-height: 95vh;
+            }
+
+            .detail-name {
+                font-size: 1.6em;
+            }
+
+            .detail-info {
+                padding: 20px;
+            }
+        }
+
+        /* Twitch link */
+        .twitch-link {
+            margin-bottom: 15px;
+        }
+
+        .twitch-link a {
+            color: #f5d76e;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1em;
+            letter-spacing: 0.3px;
+            transition: all 0.3s;
+            border-bottom: 2px solid rgba(245, 215, 110, 0.3);
+            padding-bottom: 2px;
+        }
+
+        .twitch-link a:hover {
+            color: #ffeaa7;
+            border-bottom-color: #f5d76e;
+        }
+
+        /* LIVE button */
+        @keyframes pulse-glow {
+            0% {
+                box-shadow: 0 0 5px rgba(76, 175, 80, 0.6), 0 0 15px rgba(76, 175, 80, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 15px rgba(76, 175, 80, 1), 0 0 30px rgba(76, 175, 80, 0.6);
+            }
+            100% {
+                box-shadow: 0 0 5px rgba(76, 175, 80, 0.6), 0 0 15px rgba(76, 175, 80, 0.4);
+            }
+        }
+
+        .live-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 14px 30px;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 1em;
+            letter-spacing: 0.5px;
+            animation: pulse-glow 1.5s ease-in-out infinite;
+            border: 2px solid #4CAF50;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .live-button:before {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background: white;
+            border-radius: 50%;
+            animation: pulse-glow 1.5s ease-in-out infinite;
+        }
+
+        .live-button:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #45a049 0%, #3d8b40 100%);
+        }
+    </style>
+</head>
+<body>
+    <!-- Falling leaves -->
+    <div class="leaves-container" id="leavesContainer"></div>
+
+    <!-- Main content -->
+    <div class="container">
+        <header>
+            <h1>Treasure Island Maps</h1>
+            <p class="subtitle">Browse all available islands to visit</p>
+            <div>
+                <p class="twitch-link"><a href="https://www.twitch.tv/treasureislands/" target="_blank">twitch.tv/treasureislands</a></p>
+                <a href="https://www.twitch.tv/treasureislands/" target="_blank" class="live-button">LIVE NOW</a>
+            </div>
+        </header>
+
+        <div class="filter-buttons">
+            <button class="btn-all active" onclick="filterMaps('all')">All</button>
+            <button class="btn-subscriber" onclick="filterMaps('subscriber')">Subscriber Only</button>
+            <button class="btn-ffa" onclick="filterMaps('ffa')">FFA</button>
+        </div>
+
+        <div class="gallery" id="gallery"></div>
+    </div>
+
+    <!-- Map detail modal -->
+    <div class="map-detail" id="mapDetail">
+        <div class="map-detail-content">
+            <button class="close-btn" onclick="closeMapDetail()">✕</button>
+            <img id="detailImage" class="detail-image" alt="">
+            <div class="detail-info">
+                <div class="detail-name" id="detailName"></div>
+                <div class="detail-type" id="detailType"></div>
+                <div class="copy-link">
+                    <input type="text" id="mapLink" readonly>
+                    <button class="copy-btn" onclick="copyLink()">Copy Link</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Map data with names and types
+        const subscriberMaps = [
+            'cactus', 'mocha', 'tulip', 'reef', 'honey', 'dusk', 'bloom', 'shore', 
+            'pixie', 'diy', 'breeze', 'core', 'core2', 'sunset', 'attire', 'costume', 
+            'mono', 'bumble', 'indigo', 'cherry', 'eden'
+        ];
+
+        const ffaMaps = [
+            'fern', 'latte', 'orchid', 'coral', 'syrup', 'dawn', 'petal', 'bay', 
+            'atlas', 'school', 'wither', 'cloud', 'nookea', 'series', 'tutor', 'repair', 
+            'snug', 'garment', 'robe', 'suit', 'wardrobe', 'oasis', 'atoll', 'haru', 'natsu', 'aki', 'fuyu'
+        ];
+
+        const allMaps = [
+            ...subscriberMaps.map(name => ({ name, type: 'subscriber' })),
+            ...ffaMaps.map(name => ({ name, type: 'ffa' }))
+        ];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            createLeaves();
+            renderGallery();
+        });
+
+        function createLeaves() {
+            const container = document.getElementById('leavesContainer');
+            const leafColors = [
+                'linear-gradient(45deg, #ff6b35 0%, #ff8c42 100%)',
+                'linear-gradient(45deg, #f7931e 0%, #fdb833 100%)',
+                'linear-gradient(45deg, #d4a373 0%, #c19a6b 100%)',
+                'linear-gradient(45deg, #cd5c5c 0%, #e74c3c 100%)',
+                'linear-gradient(45deg, #8b4513 0%, #a0522d 100%)'
+            ];
+
+            for (let i = 0; i < 10; i++) {
+                const leaf = document.createElement('div');
+                leaf.className = 'leaf';
+                leaf.style.background = leafColors[i % leafColors.length];
+                leaf.style.borderRadius = '50% 0';
+                leaf.style.top = Math.random() * 100 + 'px';
+                container.appendChild(leaf);
+            }
+        }
+
+        function renderGallery() {
+            const gallery = document.getElementById('gallery');
+            gallery.innerHTML = '';
+
+            allMaps.forEach((map, index) => {
+                const card = document.createElement('div');
+                card.className = `map-card show ${map.type}`;
+                card.innerHTML = `
+                    <img src="images/${capitalizeFirst(map.name)}.png" alt="${map.name}" class="map-image" onerror="this.src='images/${capitalizeFirst(map.name)}.webp'">
+                    <div class="map-info">
+                        <div class="map-name">${map.name}</div>
+                        <span class="map-type ${map.type === 'subscriber' ? 'type-subscriber' : 'type-ffa'}">
+                            ${map.type === 'subscriber' ? 'Subscriber' : 'FFA'}
+                        </span>
+                        <a href="#" onclick="openMapDetail(event, '${map.name}', '${map.type}')">View</a>
+                    </div>
+                `;
+                gallery.appendChild(card);
+            });
+        }
+
+        function filterMaps(type) {
+            const cards = document.querySelectorAll('.map-card');
+            cards.forEach(card => {
+                if (type === 'all') {
+                    card.classList.add('show');
+                } else if (type === 'subscriber' && card.classList.contains('subscriber')) {
+                    card.classList.add('show');
+                } else if (type === 'ffa' && card.classList.contains('ffa')) {
+                    card.classList.add('show');
+                } else {
+                    card.classList.remove('show');
+                }
+            });
+
+            // Update button states
+            document.querySelectorAll('.filter-buttons button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        function openMapDetail(e, mapName, mapType) {
+            e.preventDefault();
+            const modal = document.getElementById('mapDetail');
+            const image = document.getElementById('detailImage');
+            const nameEl = document.getElementById('detailName');
+            const typeEl = document.getElementById('detailType');
+            const linkInput = document.getElementById('mapLink');
+
+            // Try PNG first, fall back to WebP
+            image.src = `images/${capitalizeFirst(mapName)}.png`;
+            image.onerror = () => {
+                image.src = `images/${capitalizeFirst(mapName)}.webp`;
+            };
+
+            nameEl.textContent = mapName;
+            typeEl.textContent = mapType.toUpperCase();
+            typeEl.className = `detail-type ${mapType === 'subscriber' ? 'type-subscriber' : 'type-ffa'}`;
+            
+            // Generate shareable link
+            const mapId = `${mapName}-${mapType}`;
+            linkInput.value = `${window.location.origin}?map=${encodeURIComponent(mapId)}`;
+
+            modal.classList.add('show');
+        }
+
+        function closeMapDetail() {
+            document.getElementById('mapDetail').classList.remove('show');
+        }
+
+        function copyLink() {
+            const input = document.getElementById('mapLink');
+            input.select();
+            document.execCommand('copy');
+            
+            const btn = document.querySelector('.copy-btn');
+            const original = btn.textContent;
+            btn.textContent = 'Copied';
+            setTimeout(() => {
+                btn.textContent = original;
+            }, 2000);
+        }
+
+        function capitalizeFirst(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('mapDetail').addEventListener('click', (e) => {
+            if (e.target.id === 'mapDetail') closeMapDetail();
+        });
+    </script>
+</body>
+</html>
