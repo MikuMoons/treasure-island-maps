@@ -157,12 +157,40 @@
 
         header {
             text-align: center;
-            margin-bottom: 60px;
+            margin-bottom: 50px;
             background: rgba(255, 255, 255, 0.05);
-            padding: 50px 30px;
+            padding: 34px 30px;
             border-radius: 10px;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Decorative header emotes */
+        .header-emote {
+            position: absolute;
+            width: 64px;
+            height: 64px;
+            opacity: 0.9;
+            pointer-events: none;
+            animation: emote-bob 3s ease-in-out infinite;
+        }
+
+        @keyframes emote-bob {
+            0%, 100% { transform: translateY(0) rotate(-4deg); }
+            50% { transform: translateY(-8px) rotate(4deg); }
+        }
+
+        .header-emote.e1 { top: 22px;  left: 30px;  animation-delay: 0s; }
+        .header-emote.e2 { bottom: 24px; left: 60px; animation-delay: 0.6s; width: 54px; height: 54px; }
+        .header-emote.e3 { top: 26px;  right: 34px; animation-delay: 1.1s; }
+        .header-emote.e4 { bottom: 22px; right: 64px; animation-delay: 1.6s; width: 54px; height: 54px; }
+        .header-emote.e5 { top: 50%; left: 14px; margin-top: -26px; width: 48px; height: 48px; animation-delay: 0.9s; }
+        .header-emote.e6 { top: 50%; right: 14px; margin-top: -26px; width: 48px; height: 48px; animation-delay: 1.4s; }
+
+        @media (max-width: 760px) {
+            .header-emote { display: none; }
         }
 
         h1 {
@@ -258,6 +286,11 @@
             color: #80deea;
         }
 
+        .btn-villagers {
+            border-color: #b3e88f;
+            color: #b3e88f;
+        }
+
         button:hover {
             background: rgba(255, 255, 255, 0.12);
             transform: translateY(-2px);
@@ -274,6 +307,35 @@
 
         button.active.btn-ffa {
             box-shadow: 0 0 20px rgba(128, 222, 234, 0.3);
+        }
+
+        button.active.btn-villagers {
+            box-shadow: 0 0 20px rgba(179, 232, 143, 0.3);
+        }
+
+        /* Villagers view */
+        .villagers-view {
+            display: none;
+        }
+
+        .villager-block {
+            margin-bottom: 40px;
+        }
+
+        .villager-heading {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8em;
+            color: #f5d76e;
+            text-align: center;
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+
+        .villager-image {
+            width: 100%;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: block;
         }
 
         /* Gallery Grid */
@@ -631,6 +693,12 @@
     <!-- Main content -->
     <div class="container">
         <header>
+            <img src="images/emotes/WAVE.png" alt="" class="header-emote e1">
+            <img src="images/emotes/HEART-EYES.png" alt="" class="header-emote e2">
+            <img src="images/emotes/HYPE.png" alt="" class="header-emote e3">
+            <img src="images/emotes/STARS.png" alt="" class="header-emote e4">
+            <img src="images/emotes/COOL.png" alt="" class="header-emote e5">
+            <img src="images/emotes/LOVE.png" alt="" class="header-emote e6">
             <h1>Treasure Island Maps</h1>
             <p class="subtitle">Browse all available islands to visit</p>
             <div>
@@ -655,11 +723,24 @@
             <button class="btn-all active" onclick="filterMaps('all')">All</button>
             <button class="btn-subscriber" onclick="filterMaps('subscriber')">Subscriber Only</button>
             <button class="btn-ffa" onclick="filterMaps('ffa')">FFA</button>
+            <button class="btn-villagers" onclick="showVillagers()">Villagers</button>
         </div>
 
         <div class="no-results" id="noResults">No maps match your search.</div>
 
         <div class="gallery" id="gallery"></div>
+
+        <!-- Villagers view -->
+        <div class="villagers-view" id="villagersView">
+            <div class="villager-block">
+                <h2 class="villager-heading">Subscriber Villagers</h2>
+                <img src="images/SUB_villagers.png" alt="Subscriber Villagers" class="villager-image">
+            </div>
+            <div class="villager-block">
+                <h2 class="villager-heading">FFA Villagers</h2>
+                <img src="images/FFA_villagers.png" alt="FFA Villagers" class="villager-image">
+            </div>
+        </div>
     </div>
 
     <!-- Map detail modal -->
@@ -804,12 +885,29 @@
 
         function filterMaps(type) {
             activeType = type;
+            // Switch back to map view
+            document.getElementById('villagersView').style.display = 'none';
+            document.getElementById('gallery').style.display = 'grid';
+            document.querySelector('.search-wrap').style.display = 'flex';
             // Update button states
             document.querySelectorAll('.filter-buttons button').forEach(btn => {
                 btn.classList.remove('active');
             });
             if (event && event.target) event.target.classList.add('active');
             applyFilters();
+        }
+
+        function showVillagers() {
+            // Hide map view, show villagers
+            document.getElementById('gallery').style.display = 'none';
+            document.getElementById('noResults').style.display = 'none';
+            document.querySelector('.search-wrap').style.display = 'none';
+            document.getElementById('villagersView').style.display = 'block';
+            // Update button states
+            document.querySelectorAll('.filter-buttons button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            if (event && event.target) event.target.classList.add('active');
         }
 
         function applyFilters() {
