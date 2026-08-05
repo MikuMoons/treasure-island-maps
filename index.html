@@ -575,7 +575,7 @@
                 el.src = `/images/scatter/${name}.png`;
                 el.alt = '';
                 el.setAttribute('aria-hidden', 'true');
-                const size = 34 + Math.random() * 34;         // 34–68px
+                const size = 60 + Math.random() * 55;         // 60–115px
                 const topPct = (b / bands) * 100 + (Math.random() * (100 / bands));
                 el.style.cssText = `position:absolute;top:${topPct}%;left:${leftPct}%;
                     width:${size}px;height:auto;opacity:${0.85 + Math.random()*0.15};
