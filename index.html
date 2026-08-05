@@ -565,8 +565,8 @@
         for (let b = 0; b < bands; b++) {
             // a couple of items per band, biased toward the edges so they don't sit under content
             const slots = [
-                4 + Math.random() * 16,        // left edge zone  (4%–20%)
-                80 + Math.random() * 16        // right edge zone (80%–96%)
+                2 + Math.random() * 24,        // left zone  (2%–26%)
+                72 + Math.random() * 26        // right zone (72%–98%)
             ];
             slots.forEach(leftPct => {
                 if (Math.random() < 0.22) return;   // leave some gaps for a natural look
@@ -575,10 +575,10 @@
                 el.src = `/images/scatter/${name}.png`;
                 el.alt = '';
                 el.setAttribute('aria-hidden', 'true');
-                const size = 60 + Math.random() * 55;         // 60–115px
+                const size = 120 + Math.random() * 120;         // 120–240px
                 const topPct = (b / bands) * 100 + (Math.random() * (100 / bands));
                 el.style.cssText = `position:absolute;top:${topPct}%;left:${leftPct}%;
-                    width:${size}px;height:auto;opacity:${0.85 + Math.random()*0.15};
+                    width:${size}px;height:auto;opacity:${0.7 + Math.random()*0.25};
                     transform:rotate(${(-18 + Math.random()*36).toFixed(1)}deg);
                     filter:drop-shadow(0 4px 8px rgba(0,0,0,0.18));`;
                 if (!reduce) {
