@@ -37,11 +37,11 @@
         overflow-x: hidden;
     }
 
-    /* ── ambient drifting leaves ── */
-    .sky-layer { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    /* ── scattered AC item decorations ── */
+    .sky-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
 
     /* ══ SHELL ══ */
-    .wrap { position: relative; z-index: 2; max-width: 1360px; margin: 0 auto; padding: 0 28px; }
+    .wrap { position: relative; z-index: 2; max-width: 1780px; margin: 0 auto; padding: 0 40px; }
 
     /* ══ TOP BAR ══ */
     .topbar {
@@ -545,26 +545,50 @@
     }
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); });
 
-    // ambient drifting leaves
+    // scattered Animal Crossing item decorations
     (function () {
         const sky = document.getElementById('sky');
-        const colors = ['#3fb6a7', '#2a9d8f', '#e8956b', '#a8d8e8', '#f6efdb'];
-        const leaf = c => `data:image/svg+xml;utf8,` + encodeURIComponent(
-            `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 60"><path d="M20 2 C33 14 36 34 20 58 C4 34 7 14 20 2 Z" fill="${c}" opacity="0.5"/><path d="M20 6 L20 54" stroke="rgba(255,255,255,0.3)" stroke-width="1.4" fill="none"/></svg>`);
-        for (let i = 0; i < 14; i++) {
-            const d = document.createElement('div');
-            const size = 16 + Math.random() * 20;
-            d.style.cssText = `position:absolute;top:-8vh;left:${Math.random()*100}%;width:${size}px;height:${size*1.4}px;
-                background:url("${leaf(colors[i%colors.length])}") center/contain no-repeat;opacity:.5;
-                animation:drift ${16+Math.random()*12}s linear ${-Math.random()*24}s infinite;`;
-            const inner = document.createElement('div');
-            inner.style.cssText = `width:100%;height:100%;background:inherit;animation:sway ${3+Math.random()*3}s ease-in-out infinite;`;
-            d.style.background = 'none'; inner.style.background = `url("${leaf(colors[i%colors.length])}") center/contain no-repeat`;
-            d.appendChild(inner); sky.appendChild(d);
+        const items = [
+            'PltApple','PltAzaleaPink','PltAzaleaWhite','PltBushCamelliaPink','PltBushCamelliaRed',
+            'PltBushOsmathusOrange','PltBushOsmathusYellow','PltBushPlumeriaPink','PltBushPlumeriaWhite',
+            'PltHibiscusRed','PltHibiscusYellow','PltHolly','PltHydrangeaBlue','PltHydrangeaPink',
+            'PltMoney','PltOrange','PltPalm','PltPeach','ToolAxe',
+            'StarpieceAquarius','StarpieceCancer','StarpieceCapricornus','StarpieceGemini','StarpieceLeo',
+            'StarpiecePisces','StarpieceRare','StarpieceSagittarius','StarpieceScorpio','StarpieceTaurus'
+        ];
+
+        // Scatter items down the full height of the page in a loose grid so they
+        // spread evenly without clustering. Two per "row band" on each side.
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const bands = 26;                 // vertical bands over the page
+        let idx = 0;
+        for (let b = 0; b < bands; b++) {
+            // a couple of items per band, biased toward the edges so they don't sit under content
+            const slots = [
+                4 + Math.random() * 16,        // left edge zone  (4%–20%)
+                80 + Math.random() * 16        // right edge zone (80%–96%)
+            ];
+            slots.forEach(leftPct => {
+                if (Math.random() < 0.22) return;   // leave some gaps for a natural look
+                const name = items[idx % items.length]; idx++;
+                const el = document.createElement('img');
+                el.src = `/images/scatter/${name}.png`;
+                el.alt = '';
+                el.setAttribute('aria-hidden', 'true');
+                const size = 34 + Math.random() * 34;         // 34–68px
+                const topPct = (b / bands) * 100 + (Math.random() * (100 / bands));
+                el.style.cssText = `position:absolute;top:${topPct}%;left:${leftPct}%;
+                    width:${size}px;height:auto;opacity:${0.16 + Math.random()*0.12};
+                    transform:rotate(${(-18 + Math.random()*36).toFixed(1)}deg);
+                    filter:drop-shadow(0 4px 8px rgba(0,0,0,0.18));`;
+                if (!reduce) {
+                    el.style.animation = `bob ${5 + Math.random()*4}s ease-in-out ${(-Math.random()*5).toFixed(1)}s infinite`;
+                }
+                sky.appendChild(el);
+            });
         }
         const st = document.createElement('style');
-        st.textContent = `@keyframes drift{0%{transform:translateY(-8vh)}100%{transform:translateY(112vh)}}
-            @keyframes sway{0%,100%{transform:translateX(0) rotate(-12deg)}50%{transform:translateX(30px) rotate(12deg)}}`;
+        st.textContent = `@keyframes bob{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}50%{transform:translateY(-12px) rotate(var(--r,0deg))}}`;
         document.head.appendChild(st);
     })();
 
