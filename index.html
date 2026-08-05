@@ -557,38 +557,49 @@
             'StarpiecePisces','StarpieceRare','StarpieceSagittarius','StarpieceScorpio','StarpieceTaurus'
         ];
 
-        // Scatter items down the full height of the page in a loose grid so they
-        // spread evenly without clustering. Two per "row band" on each side.
+        // Scatter items down the page in the side margins, spaced apart so they
+        // never overlap and don't form obvious lines. We propose random spots and
+        // reject any that land too close to an already-placed item.
         const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const bands = 26;                 // vertical bands over the page
-        let idx = 0;
-        for (let b = 0; b < bands; b++) {
-            // a couple of items per band, biased toward the edges so they don't sit under content
-            const slots = [
-                2 + Math.random() * 24,        // left zone  (2%–26%)
-                72 + Math.random() * 26        // right zone (72%–98%)
-            ];
-            slots.forEach(leftPct => {
-                if (Math.random() < 0.22) return;   // leave some gaps for a natural look
-                const name = items[idx % items.length]; idx++;
-                const el = document.createElement('img');
-                el.src = `/images/scatter/${name}.png`;
-                el.alt = '';
-                el.setAttribute('aria-hidden', 'true');
-                const size = 120 + Math.random() * 120;         // 120–240px
-                const topPct = (b / bands) * 100 + (Math.random() * (100 / bands));
-                el.style.cssText = `position:absolute;top:${topPct}%;left:${leftPct}%;
-                    width:${size}px;height:auto;opacity:${0.7 + Math.random()*0.25};
-                    transform:rotate(${(-18 + Math.random()*36).toFixed(1)}deg);
-                    filter:drop-shadow(0 4px 8px rgba(0,0,0,0.18));`;
-                if (!reduce) {
-                    el.style.animation = `bob ${5 + Math.random()*4}s ease-in-out ${(-Math.random()*5).toFixed(1)}s infinite`;
-                }
-                sky.appendChild(el);
-            });
+        const placed = [];                 // {xPct, yPct} of accepted items
+        const pageH = document.body.scrollHeight || document.documentElement.scrollHeight;
+        const target = 30;                 // how many items to aim for
+        const minGapX = 12;                // min horizontal gap (% of width)
+        const minGapY = 5.2;               // min vertical gap (% of page height)
+        let idx = 0, tries = 0;
+
+        while (placed.length < target && tries < 4000) {
+            tries++;
+            // pick a side margin: left 1–17% or right 83–99%
+            const side = Math.random() < 0.5;
+            const xPct = side ? (1 + Math.random() * 16) : (83 + Math.random() * 16);
+            const yPct = 1 + Math.random() * 98;
+
+            // reject if too close to an existing item
+            let ok = true;
+            for (const p of placed) {
+                if (Math.abs(p.xPct - xPct) < minGapX && Math.abs(p.yPct - yPct) < minGapY) { ok = false; break; }
+            }
+            if (!ok) continue;
+            placed.push({ xPct, yPct });
+
+            const name = items[idx % items.length]; idx++;
+            const el = document.createElement('img');
+            el.src = `/images/scatter/${name}.png`;
+            el.alt = '';
+            el.setAttribute('aria-hidden', 'true');
+            const size = 130 + Math.random() * 110;         // 130–240px
+            el.style.cssText = `position:absolute;top:${yPct}%;left:${xPct}%;
+                width:${size}px;height:auto;opacity:${0.78 + Math.random()*0.22};
+                transform:rotate(${(-16 + Math.random()*32).toFixed(1)}deg);
+                filter:drop-shadow(0 5px 12px rgba(0,0,0,0.2));`;
+            if (!reduce) {
+                el.style.animation = `bob ${6 + Math.random()*4}s ease-in-out ${(-Math.random()*6).toFixed(1)}s infinite`;
+            }
+            sky.appendChild(el);
         }
         const st = document.createElement('style');
-        st.textContent = `@keyframes bob{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}50%{transform:translateY(-12px) rotate(var(--r,0deg))}}`;
+        st.textContent = `@keyframes bob{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}50%{transform:translateY(-13px) rotate(var(--r,0deg))}}`;
         document.head.appendChild(st);
     })();
 
